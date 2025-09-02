@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>Foglalások</title>
+    <link rel="stylesheet" th:href="@{/adminRentals.css}">
+</head>
+<body>
+<div class="top-buttons">
+    <a th:href="@{/admin}">
+        <button>Vissza</button>
+    </a>
+</div>
+<h1>Foglalások</h1>
+<div class="rental-list">
+    <div class="rental-card" th:each="rental : ${rentals}">
+        <div class="rental-item">
+            <span class="rental-label">ID:</span>
+            <span class="rental-value" th:text="${rental.getId()}"></span>
+        </div>
+        <div class="rental-item">
+            <span class="rental-label">Autó ID:</span>
+            <span class="rental-value" th:text="${rental.carId}"></span>
+        </div>
+        <div class="rental-item">
+            <span class="rental-label">Kezdés:</span>
+            <span class="rental-value" th:text="${rental.start}"></span>
+        </div>
+        <div class="rental-item">
+            <span class="rental-label">Vége:</span>
+            <span class="rental-value" th:text="${rental.end}"></span>
+        </div>
+        <div class="rental-item">
+            <span class="rental-label">Név:</span>
+            <span class="rental-value" th:text="${rental.name}"></span>
+        </div>
+        <div class="rental-item">
+            <span class="rental-label">Email:</span>
+            <span class="rental-value" th:text="${rental.email}"></span>
+        </div>
+        <div class="rental-item">
+            <span class="rental-label">Cím:</span>
+            <span class="rental-value" th:text="${rental.address}"></span>
+        </div>
+        <div class="rental-item">
+            <span class="rental-label">Telefon:</span>
+            <span class="rental-value" th:text="${rental.phone}"></span>
+        </div>
+    </div>
+</div>
+</body>
+</html>

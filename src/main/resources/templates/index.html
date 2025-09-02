@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+    </style>
+    <link rel="stylesheet" th:href="@{/index.css}">
+</head>
+<body>
+<div th:if="${admin}" class="top-buttons">
+    <a th:href="@{/admin}">
+        <button>Admin felület</button>
+    </a>
+</div>
+<h1>Autó kölcsönzés</h1>
+<form th:action="@{/cars/search}" method="get">
+    <label for="start">Válasz ki mikortól:</label>
+    <input type="date" id="start" th:value="${param.start}" name="start"
+           th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" required>
+
+    <label for="end">Medig:</label>
+    <input type="date" id="end" th:value="${param.end}" name="end"
+           th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" required>
+
+    <button type="submit">Keresés</button>
+</form>
+<div class="error" th:if="${errors != null && !errors.isEmpty()}">
+    <p>Hibák:</p>
+    <ul>
+        <li th:each="error : ${errors}" th:text="${error}"></li>
+    </ul>
+</div>
+<div class="success" th:if="${success != null && !success.isEmpty()}">
+    <ul>
+        <li th:text="${success}"></li>
+    </ul>
+</div>
+
+</body>
+</html>

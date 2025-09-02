@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/adminCars.css}">
+</head>
+<body>
+
+<div class="top-buttons">
+    <a th:href="@{/admin}">
+        <button>Vissza</button>
+    </a>
+    <a th:href="@{/admin/cars/add}">
+        <button>Új autó hozzáadása</button>
+    </a>
+</div>
+
+<div class="cars-container">
+    <div class="car-card" th:each="car: ${cars}">
+        <img th:src="@{'/images/' + ${car.getId()}}" th:alt="${car.getName()}">
+
+        <p><strong>ID:</strong> <span th:text="${car.getId()}"></span></p>
+        <p><strong>Név:</strong> <span th:text="${car.getName()}"></span></p>
+        <p><strong>Napi ár:</strong> <span th:text="${car.getPricePerDay()}"></span> Ft</p>
+
+        <a th:href="@{/admin/cars/modify/{id}(id=${car.getId()})}">
+            <button>Modosítás</button>
+        </a>
+    </div>
+</div>
+
+
+
+</body>
+</html>

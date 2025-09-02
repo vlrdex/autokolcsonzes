@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Car Rental</title>
+    <link rel="stylesheet" th:href="@{/searchResult.css}">
+</head>
+<body>
+<div class="car-container">
+    <div class="car-card" th:each="car : ${cars}">
+        <img th:src="@{'/images/' + ${car.getId()}}" th:alt="${car.getName()}">
+        <h3 th:text="${car.getName()}"></h3>
+        <p th:text="'Napi bérleti díj: ' + ${car.getPricePerDay()}"></p>
+        <form th:action="@{/cars/{id}(id=${car.getId()})}" method="get">
+            <input type="hidden" name="start" th:value="${param.start}">
+            <input type="hidden" name="end" th:value="${param.end}">
+            <button type="submit">Kölcsönzés</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>Új autó hozzáadása</title>
+    <link rel="stylesheet" th:href="@{/adminCarsUpload.css}">
+</head>
+<body>
+<div>
+    <a th:href="@{/admin/cars}">
+        <button type="button" class="back-btn">Vissza</button>
+    </a>
+</div>
+<div class="form-container">
+    <h1>Új autó hozzáadása</h1>
+    <form th:action="@{/admin/cars/add}" method="post" enctype="multipart/form-data">
+
+        <label for="image">Autó képe:</label>
+        <input type="file" name="image" id="image" accept=".jpg,.jpeg">
+
+        <label for="name">Autó neve:</label>
+        <input type="text" name="name" id="name" placeholder="pl. Opel Astra" required>
+
+        <label for="pricePerDay">Napi ár (Ft):</label>
+        <input type="number" name="pricePerDay" id="pricePerDay" placeholder="pl. 10000" required>
+
+        <label for="active">Aktív:</label>
+        <input type="checkbox" name="active" id="active">
+
+        <button type="submit">Hozzáadás</button>
+    </form>
+</div>
+</body>
+</html>

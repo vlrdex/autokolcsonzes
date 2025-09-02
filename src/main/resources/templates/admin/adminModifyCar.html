@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>Új autó hozzáadása</title>
+    <link rel="stylesheet" th:href="@{/adminCarsUpload.css}">
+</head>
+<body>
+<div>
+    <a th:href="@{/admin/cars}">
+        <button type="button" class="back-btn">Vissza</button>
+    </a>
+</div>
+<div class="container">
+
+    <div class="form-container">
+        <h1>Autó modosítás</h1>
+        <img th:src="@{'/images/' + ${car.getId()}}" th:alt="${car.getName()}">
+        <form th:action="@{/admin/cars/modify/{id}(id=${car.getId()})}" method="post" enctype="multipart/form-data">
+
+            <label for="image">Autó képe:</label>
+            <input type="file" name="image" id="image" accept=".jpg,.jpeg">
+
+            <label for="name">Autó neve:</label>
+            <input type="text" name="name" th:value="${car.getName()}" id="name" placeholder="pl. Opel Astra" required>
+
+            <label for="pricePerDay">Napi ár (Ft):</label>
+            <input type="number" name="pricePerDay" th:value="${car.getPricePerDay()}" id="pricePerDay" placeholder="pl. 10000" required>
+
+            <label for="active">Aktív:</label>
+            <input type="checkbox" name="active" th:checked="${car.isActive()}" id="active">
+
+            <button type="submit">Modosítás</button>
+        </form>
+    </div>
+
+    <div th:if="${errors!=null && !errors.isEmpty()}" class="error-box">
+        <p>Az autónak vannak folyamatban lévő foglalásai nem lehet deaktiválni</p>
+        <p>A meglévő foglalások id-ja:</p>
+        <ul>
+            <li th:each="error : ${errors}" th:text="${error.getId()}"></li>
+        </ul>
+    </div>
+
+    <div th:if="${success!=null && !success.isEmpty()}" class="success-box">
+        <p th:each="success : ${success}" th:text="${success}"></p>
+    </div>
+
+</div>
+</body>
+</html>

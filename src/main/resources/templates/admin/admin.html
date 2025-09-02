@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/admin.css}">
+</head>
+<body>
+<div class="top-buttons">
+    <a th:href="@{/}">
+        <button>Vissza</button>
+    </a>
+</div>
+<div class="admin-dashboard">
+    <div class="admin-section">
+        <p>Foglalások kezelése</p>
+        <a th:href="@{/admin/rentals/all}">
+            <button>Összes foglalás</button>
+        </a>
+        <a th:href="@{/admin/rentals/current}">
+            <button>Jelenlegi foglalások</button>
+        </a>
+    </div>
+
+    <div class="admin-section">
+        <p>Autók kezelése</p>
+        <a th:href="@{/admin/cars}">
+            <button>Autók</button>
+        </a>
+    </div>
+</div>
+</body>
+</html>

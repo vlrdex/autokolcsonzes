@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/error.css}">
+</head>
+<body>
+<div class="error-box">
+    <p>Valami hiba történt</p>
+    <form th:action="@{/}" th:method="get">
+        <button type="submit">Vissza a főoldalra</button>
+    </form>
+</div>
+</body>
+</html>

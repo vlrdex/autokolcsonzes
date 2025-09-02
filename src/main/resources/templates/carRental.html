@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/carRental.css}">
+</head>
+<body>
+<div class="card">
+    <img th:src="@{'/images/' + ${car.getId()}}" th:alt="${car.getName()}">
+    <div class="card-content">
+        <form th:action="@{/rentals/add}" method="post">
+
+
+            <input type="hidden" name="carid" th:value="${car.getId()}">
+            <input type="hidden" th:value="${param.start}" name="start">
+            <input type="hidden" th:value="${param.end}" name="end">
+
+
+            <div class="info">
+                <p th:text="'Kezdet: ' + ${param.start}"></p>
+                <p th:text="'Vége: ' + ${param.end}"></p>
+            </div>
+
+            <div class="form-fields">
+                <div>
+                    <label for="name">Név:</label>
+                    <input type="text" id="name" name="name">
+                </div>
+
+                <div>
+                    <label for="email">Email:</label>
+                    <input type="text" id="email" name="email">
+                </div>
+
+                <div>
+                    <label for="address">Cím:</label>
+                    <input type="text" id="address" name="address">
+                </div>
+
+                <div>
+                    <label for="phone">Telefonszám:</label>
+                    <input type="text" id="phone" name="phone">
+                </div>
+            </div>
+
+            <div class="submit-section">
+                <p th:text="'Bérelt napok száma: ' + ${days}"></p>
+                <p th:text="'Végösszeg: ' + ${days * car.getPricePerDay()}"></p>
+                <button type="submit">Kölcsönzés</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="error" th:if="${errors != null && !errors.isEmpty()}">
+    <p>Hibák:</p>
+    <ul>
+        <li th:each="error : ${errors}" th:text="${error}"></li>
+    </ul>
+</div>
+
+</body>
+</html>
