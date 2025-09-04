@@ -3,7 +3,7 @@ package com.example.autokolcsonzes.Service;
 import com.example.autokolcsonzes.DAO.Impl.RentalDAOImpl;
 import com.example.autokolcsonzes.DAO.RentalDAO;
 import com.example.autokolcsonzes.Model.Rental;
-import com.example.autokolcsonzes.Utils.RentalValidationException;
+import com.example.autokolcsonzes.Utils.ValidationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -18,19 +18,28 @@ public class RentalSevice {
         this.rentalDAO=rentalDAO;
     }
 
-    public boolean createRental(Rental rental) throws RentalValidationException{
+    public int createRental(Rental rental) throws ValidationException {
+        if (rental==null){
+            return 0;
+        }
+
         List<String> errors=new ArrayList<>();
 
-        LocalDate startDate=LocalDate.parse(rental.getStart());
-        LocalDate endDate=LocalDate.parse(rental.getEnd());
+        try{
+            LocalDate startDate=LocalDate.parse(rental.getStart());
+            LocalDate endDate=LocalDate.parse(rental.getEnd());
 
-        if(startDate.isBefore(LocalDate.now())){
-            errors.add("A kivétel dátuma nem lehet a múltban.");
+            if(startDate.isBefore(getCurrentDate())){
+                errors.add("A kivétel dátuma nem lehet a múltban.");
+            }
+
+            if (startDate.isAfter(endDate)){
+                errors.add("„A visszahozás dátuma nem lehet korábbi, mint a kivétel dátuma.”");
+            }
+        }catch (Exception ex){
+            errors.add("Az időpont formátuma nem megfelelő");
         }
 
-        if (startDate.isAfter(endDate)){
-            errors.add("„A visszahozás dátuma nem lehet korábbi, mint a kivétel dátuma.”");
-        }
 
         if (rental.getEmail() == null ||
                 !rental.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
@@ -43,14 +52,15 @@ public class RentalSevice {
         }
 
         if (!errors.isEmpty()){
-            throw new RentalValidationException(errors);
+            throw new ValidationException(errors);
         }
 
         try {
             return rentalDAO.createRental(rental);
         }catch (RuntimeException ex){
+            errors.add(ex.getMessage());
             errors.add("Ez az autó a megadott időszakban már foglalt!");
-            throw new RentalValidationException(errors);
+            throw new ValidationException(errors);
         }
     }
 
@@ -64,5 +74,9 @@ public class RentalSevice {
 
     public List<Rental> getCurrentForCar(int id){
         return rentalDAO.listCurrentForCar(id,LocalDate.now().toString());
+    }
+
+    LocalDate getCurrentDate(){
+        return LocalDate.now();
     }
 }

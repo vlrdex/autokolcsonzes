@@ -2,10 +2,10 @@ package com.example.autokolcsonzes.Utils;
 
 import java.util.List;
 
-public class RentalValidationException extends RuntimeException {
+public class ValidationException extends RuntimeException {
     private final List<String> errors;
 
-    public RentalValidationException(List<String> errors) {
+    public ValidationException(List<String> errors) {
         super(String.join("; ", errors)); // combined message
         this.errors = errors;
     }

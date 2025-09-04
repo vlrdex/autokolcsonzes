@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 public class Rental {
     private int id;
     private int carId;
@@ -99,5 +101,18 @@ public class Rental {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Rental rental = (Rental) o;
+        return id == rental.id && carId == rental.carId && Objects.equals(start, rental.start) && Objects.equals(end, rental.end) && Objects.equals(name, rental.name) && Objects.equals(email, rental.email) && Objects.equals(address, rental.address) && Objects.equals(phone, rental.phone);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, carId, start, end, name, email, address, phone);
     }
 }

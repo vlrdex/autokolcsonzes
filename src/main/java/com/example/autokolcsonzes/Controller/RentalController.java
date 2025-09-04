@@ -2,7 +2,7 @@ package com.example.autokolcsonzes.Controller;
 
 import com.example.autokolcsonzes.Model.Rental;
 import com.example.autokolcsonzes.Service.RentalSevice;
-import com.example.autokolcsonzes.Utils.RentalValidationException;
+import com.example.autokolcsonzes.Utils.ValidationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,13 +41,13 @@ public class RentalController {
         rental.setPhone(phone);
 
         try {
-            if(rentalSevice.createRental(rental)){
+            if(rentalSevice.createRental(rental)!=0){
                 model.addAttribute("success","Az autó sikeresen lefoglalva");
                 return "index";
             }else {
                 return "error";
             }
-        }catch (RentalValidationException ex){
+        }catch (ValidationException ex){
             List<String> errors=ex.getErrors();
             System.out.println(errors);
             redirectAttributes.addFlashAttribute("errors",errors);

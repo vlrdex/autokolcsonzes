@@ -4,6 +4,7 @@ import com.example.autokolcsonzes.Config.WebSecurityConfig;
 import com.example.autokolcsonzes.Model.Car;
 import com.example.autokolcsonzes.Service.CarService;
 import com.example.autokolcsonzes.Service.ImageService;
+import com.example.autokolcsonzes.Utils.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,32 +35,37 @@ public class CarController {
     @GetMapping("/cars/search")
     public String search(@RequestParam("start") String start, @RequestParam("end") String end, Model model){
 
-        List<String> errors = new ArrayList<>();
 
-        LocalDate startDate=LocalDate.parse(start);
-        LocalDate endDate=LocalDate.parse(end);
+        try{
+            List<Car> cars=carService.searchCar(start,end);
 
-        if(startDate.isBefore(LocalDate.now())){
-            errors.add("A kivétel dátuma nem lehet a múltban.");
-        }
+            List<String> errors=new ArrayList<>();
 
-        if (startDate.isAfter(endDate)){
-            errors.add("„A visszahozás dátuma nem lehet korábbi, mint a kivétel dátuma.”");
-        }
+            if (cars.isEmpty()){
+                errors.add("Sajnos a két időpont között nincs szabad autónk");
+            }
 
-        List<Car> cars=carService.searchCar(start,end);
+            if (errors.isEmpty()){
 
-        if (cars.isEmpty()){
-            errors.add("Sajnos a két időpont között nincs szabad autónk");
-        }
+                model.addAttribute("cars",cars);
+                return "searchResult";
 
-        if (errors.isEmpty()){
-            model.addAttribute("cars",cars);
-            return "searchResult";
-        }else {
+            }else {
+
+                model.addAttribute("errors",errors);
+                return "index";
+
+            }
+
+        }catch (ValidationException ex){
+
+            List<String> errors=ex.getErrors();
+
             model.addAttribute("errors",errors);
             return "index";
+
         }
+
     }
 
     @GetMapping("/cars/{id}")

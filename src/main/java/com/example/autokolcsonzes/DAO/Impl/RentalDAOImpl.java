@@ -5,11 +5,15 @@ import com.example.autokolcsonzes.Model.Rental;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 @Component
@@ -21,24 +25,33 @@ public class RentalDAOImpl implements RentalDAO {
         this.jdbcTemplate=jdbcTemplate;
     }
     @Override
-    public boolean createRental(Rental rental) throws RuntimeException {
+    public int createRental(Rental rental) throws RuntimeException {
         try {
-            return jdbcTemplate.update(
-                    "INSERT INTO rental(carid, start, end, name, email, address, phone) " +
-                            "VALUES (?, ?, ?, ?, ?, ?, ?);",
-                    rental.getCarId(),
-                    rental.getStart(),
-                    rental.getEnd(),
-                    rental.getName(),
-                    rental.getEmail(),
-                    rental.getAddress(),
-                    rental.getPhone()
-            ) == 1;
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+
+            jdbcTemplate.update(connection -> {
+                PreparedStatement ps = connection.prepareStatement(
+                        "INSERT INTO rental(carid, start, end, name, email, address, phone) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                        Statement.RETURN_GENERATED_KEYS
+                );
+                ps.setInt(1, rental.getCarId());
+                ps.setDate(2, java.sql.Date.valueOf(rental.getStart()));
+                ps.setDate(3, java.sql.Date.valueOf(rental.getEnd()));
+                ps.setString(4, rental.getName());
+                ps.setString(5, rental.getEmail());
+                ps.setString(6, rental.getAddress());
+                ps.setString(7, rental.getPhone());
+                return ps;
+            }, keyHolder);
+
+            return keyHolder.getKey().intValue(); // return the generated ID
+
         } catch (DataAccessException ex) {
             Throwable rootCause = ex.getRootCause();
             throw new RuntimeException(rootCause.getMessage(), ex);
         }
     }
+
 
     @Override
     public List<Rental> listAll() {
@@ -47,12 +60,12 @@ public class RentalDAOImpl implements RentalDAO {
 
     @Override
     public List<Rental> listCurrent(String date){
-        return jdbcTemplate.query("SELECT * FROM rental r WHERE ? < r.end;",new RentalMapper(),date);
+        return jdbcTemplate.query("SELECT * FROM rental r WHERE r.end > ?;",new RentalMapper(),date);
     }
 
     @Override
     public List<Rental> listCurrentForCar(int id,String date){
-        return jdbcTemplate.query("SELECT * FROM rental r WHERE ? < r.end and r.carid=?;",new RentalMapper(),date,id);
+        return jdbcTemplate.query("SELECT * FROM rental r WHERE r.end > ? and r.carid=?;",new RentalMapper(),date,id);
     }
 
     public class RentalMapper implements RowMapper<Rental>{

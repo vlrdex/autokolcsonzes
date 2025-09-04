@@ -52,4 +52,8 @@ public class Car {
     public void setActive(boolean active) {
         this.active = active;
     }
+
+    public boolean equals(Car other){
+        return this.id==other.id && this.name.equals(other.name) && this.pricePerDay==other.pricePerDay && this.active==other.active;
+    }
 }
