@@ -88,7 +88,7 @@ public class CarService {
 
         List<Rental> rentals=rentalSevice.getCurrentForCar(car.getId());
 
-        if (rentals.isEmpty()){
+        if (rentals.isEmpty() || car.isActive()){
             return carDAO.modifyCar(car);
         }else {
             throw new CarDeactivationException(rentals);

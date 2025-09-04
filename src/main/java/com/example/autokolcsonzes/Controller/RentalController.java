@@ -1,5 +1,6 @@
 package com.example.autokolcsonzes.Controller;
 
+import com.example.autokolcsonzes.Config.WebSecurityConfig;
 import com.example.autokolcsonzes.Model.Rental;
 import com.example.autokolcsonzes.Service.RentalSevice;
 import com.example.autokolcsonzes.Utils.ValidationException;
@@ -43,6 +44,7 @@ public class RentalController {
         try {
             if(rentalSevice.createRental(rental)!=0){
                 model.addAttribute("success","Az autó sikeresen lefoglalva");
+                model.addAttribute("admin", WebSecurityConfig.getIsAdmin());
                 return "index";
             }else {
                 return "error";
