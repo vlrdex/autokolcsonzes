@@ -81,6 +81,7 @@ public class CarController {
             Car car=carService.getCar(id);
             model.addAttribute("car",car);
 
+
             LocalDate startDate=LocalDate.parse(start);
             LocalDate endDate=LocalDate.parse(end);
 

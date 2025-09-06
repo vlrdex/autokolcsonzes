@@ -1,6 +1,7 @@
 package com.example.autokolcsonzes.Service;
 
 import com.example.autokolcsonzes.Model.Car;
+import com.example.autokolcsonzes.Model.Rental;
 import com.example.autokolcsonzes.Service.CarService;
 import com.example.autokolcsonzes.Utils.CarDeactivationException;
 import com.example.autokolcsonzes.Utils.ValidationException;
@@ -19,6 +20,8 @@ public class CarServiceTest {
 
     @Autowired
     private CarService carService;
+    @Autowired
+    private RentalSevice rentalSevice;
 
     @Test
     public void testAddCarAndGetCarWorks(){
@@ -61,6 +64,63 @@ public class CarServiceTest {
             Car testCar2=carService.getCar(testCar.getId());
             Assertions.assertTrue(testCar.equals(testCar2));
         }
+    }
+
+    @Test
+    public void testModifyCarWithRentalCarStaysActice() throws CarDeactivationException {
+        Car testCar = new Car();
+        testCar.setName("teszt");
+        testCar.setPricePerDay(200);
+        testCar.setActive(true);
+
+        testCar.setId(carService.addCar(testCar));
+
+        Rental rental=new Rental();
+        rental.setCarId(testCar.getId());
+        rental.setStart("3000-01-01");
+        rental.setEnd("3000-02-01");
+        rental.setName("Teszt Jánós");
+        rental.setEmail("test@gmail.com");
+        rental.setAddress("Szeged Tisza utca 68.");
+        rental.setPhone("+36301234567");
+
+        rental.setId(rentalSevice.createRental(rental));
+
+        testCar.setName("teszt2");
+        testCar.setPricePerDay(2000);
+
+        //nem szabad hibát dobnia
+        if (carService.modifyCar(testCar)){
+            Car teszt2=carService.getCar(testCar.getId());
+            Assertions.assertTrue(testCar.equals(teszt2));
+        }
+    }
+
+    @Test
+    public void testModifyCarWithRentalCarBecomesInactice(){
+        Car testCar = new Car();
+        testCar.setName("teszt");
+        testCar.setPricePerDay(200);
+        testCar.setActive(true);
+
+        testCar.setId(carService.addCar(testCar));
+
+        Rental rental=new Rental();
+        rental.setCarId(testCar.getId());
+        rental.setStart("3000-01-01");
+        rental.setEnd("3000-02-01");
+        rental.setName("Teszt Jánós");
+        rental.setEmail("test@gmail.com");
+        rental.setAddress("Szeged Tisza utca 68.");
+        rental.setPhone("+36301234567");
+
+        rental.setId(rentalSevice.createRental(rental));
+
+        testCar.setName("teszt2");
+        testCar.setPricePerDay(2000);
+        testCar.setActive(false);
+
+       Assertions.assertThrows(CarDeactivationException.class,() -> carService.modifyCar(testCar));
     }
 
     @Test

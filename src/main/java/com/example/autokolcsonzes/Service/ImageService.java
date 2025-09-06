@@ -1,5 +1,6 @@
 package com.example.autokolcsonzes.Service;
 
+import lombok.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,8 @@ import java.nio.file.Paths;
 @Service
 public class ImageService {
 
-    private final String path="/home/tothpeter/Pictures/auto";
+    String path="/home/tothpeter/Pictures/auto";
+
 
     public Resource getImage(String filename) throws MalformedURLException {
 
